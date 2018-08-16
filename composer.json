@@ -18,7 +18,6 @@
     ],
     "require": {
         "yiisoft/yii2": "*",
-        "cinghie/yii2-traits": "*",
         "drewm/mailchimp-api": "*"
     },
     "autoload": {

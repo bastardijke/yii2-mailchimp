@@ -17,6 +17,7 @@ use Yii;
 use DrewM\MailChimp\MailChimp;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\data\ArrayDataProvider;
 
 class DefaultController extends Controller
 {
@@ -32,15 +33,26 @@ class DefaultController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['lists', 'list'],
+                        'actions' => [ 'index', 'lists', 'list', 'member' , 'campaigns', 'campaign', ],
                         'roles' => $this->module->roles
                     ]
                 ],
                 'denyCallback' => function () {
-	                throw new \RuntimeException(Yii::t('traits','You are not allowed to access this page'));
+	                throw new \RuntimeException(Yii::t('mailchimp','You are not allowed to access this page'));
                 }
             ]
         ];
+    }
+
+    /**
+     * Displays import view
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    public function actionIndex()
+    {
+        return $this->render( 'index' );
     }
 
 	/**
@@ -55,9 +67,13 @@ class DefaultController extends Controller
 
         $MailChimp = new MailChimp($apiKey);
         $lists = $MailChimp->get('lists');
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $lists['lists'],
+            'key' => 'id',
+        ]);
 
         return $this->render('lists', [
-            'lists' => $lists['lists'],
+            'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -76,12 +92,77 @@ class DefaultController extends Controller
         $name = $request->get('name');
 
         $MailChimp = new MailChimp($apiKey);
-        $members = $MailChimp->get('lists/' .$id. '/members');
+
+        $members = $MailChimp->get('lists/' .$id. '/members' , [ 'count' => Yii::$app->controller->module->count, ] );
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $members['members'],
+        ]);
 
         return $this->render('list', [
-            'members' => $members['members'],
+            'dataProvider' => $dataProvider,
+            'members' => $members,
             'id' => $id,
             'name' => $name
+        ]);
+    }
+
+    /**
+     * Displays List Member info
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    public function actionMember( $id , $list_id )
+    {
+        $apiKey = Yii::$app->controller->module->apiKey;
+
+        $MailChimp = new MailChimp( $apiKey );
+        $member = $MailChimp->get( 'lists/' . $list_id . '/members/' . $id );
+
+        return $this->render('member', [
+            'member' => $member,
+        ]);
+    }
+
+
+    /**
+     * Displays campaigns list
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    public function actionCampaigns()
+    {
+        $apiKey = Yii::$app->controller->module->apiKey;
+
+        $MailChimp = new MailChimp( $apiKey );
+        $campaigns = $MailChimp->get( 'campaigns' );
+
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $campaigns[ 'campaigns' ],
+            'key' => 'id',
+        ]);
+
+        return $this->render('campaigns', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Displays campaign info
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    public function actionCampaign($id)
+    {
+        $apiKey = Yii::$app->controller->module->apiKey;
+
+        $MailChimp = new MailChimp( $apiKey );
+        $campaign = $MailChimp->get( 'campaigns/' . $id );
+
+        return $this->render('campaign', [
+            'campaign' => $campaign,
         ]);
     }
 

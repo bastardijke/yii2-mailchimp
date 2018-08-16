@@ -32,7 +32,8 @@ Set on your configuration file, in modules section
         'class' => 'cinghie\mailchimp\Mailchimp',
         'apiKey' => 'YOUR_API_KEY',
         'showFirstname' => true,
-        'showLastname' => true
+        'showLastname' => true,
+        'count' => 2000 // The number of records to return. Default value is 10.
     ]
     
 ]

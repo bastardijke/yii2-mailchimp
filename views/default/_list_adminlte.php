@@ -18,8 +18,8 @@ use yii\helpers\Html;
 					<table class="table no-margin">
 						<thead>
 						<tr>
-							<th class="text-center"><?= Yii::t('traits','Name') ?></th>
-							<th class="text-center"><?= Yii::t('traits','Email') ?></th>
+							<th class="text-center"><?= Yii::t('mailchimp','Name') ?></th>
+							<th class="text-center"><?= Yii::t('mailchimp','Email') ?></th>
 							<th class="text-center"><?= Yii::t('mailchimp','Subscription\s Date') ?></th>
 							<th class="text-center"><?= Yii::t('mailchimp','IP') ?></th>
 						</tr>

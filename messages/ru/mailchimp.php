@@ -10,10 +10,10 @@
  * @version 0.2.0
  */
 
-return array(
+return [
     'Email' => 'Email',
-    'First Name' => 'имя',
-    'Last Name' => 'фамилия',
+    'First Name' => 'Имя',
+    'Last Name' => 'Фамилия',
     'List Name' => 'Название списка',
     'Lists' => 'Списки',
     'List' => 'Список',
@@ -22,4 +22,5 @@ return array(
     'Submit' => 'отправляй',
     'Subscribe' => 'Подписывайся',
     'Unsubscribe Count' => 'Отказ от рассылки',
-);
+    'You are not allowed to access this page' => 'У Вас недостаточно прав для доступа к этой странице',
+];

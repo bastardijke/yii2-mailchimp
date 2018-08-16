@@ -32,6 +32,9 @@ class Mailchimp extends \yii\base\Module
 	// Show Titles in the views
 	public $showTitles = false;
 
+    // Default query 'count': The number of records to return.
+    public $count = 10;
+
     /**
      * @inheritdoc
      */

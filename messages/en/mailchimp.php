@@ -22,4 +22,5 @@ return array(
     'Submit' => 'Submit',
     'Subscribe' => 'Subscribe',
     'Unsubscribe Count' => 'Unsubscribe Count',
+    'You are not allowed to access this page' => 'You are not allowed to access this page',
 );
