@@ -10,8 +10,8 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="mailchimp-index container"> 
 
     <p>
-        <?= Html::a( '<i class="glyphicon glyphicon-align-justify"></i> ' . Yii::t('mailchimp', 'Lists'), ['lists'], ['class' => 'btn btn-default']) ?>
-        <?= Html::a( '<i class="glyphicon glyphicon-align-justify"></i> ' . Yii::t('mailchimp', 'Campaigns'), ['campaigns'], ['class' => 'btn btn-default']) ?>
+        <?= Html::a( '<i class="glyphicon glyphicon-align-justify"></i> ' . Yii::t('mailchimp', 'Lists'), ['list/index'], ['class' => 'btn btn-default']) ?>
+        <?= Html::a( '<i class="glyphicon glyphicon-align-justify"></i> ' . Yii::t('mailchimp', 'Campaigns'), ['campaign/index'], ['class' => 'btn btn-default']) ?>
     </p>
 
 </div>

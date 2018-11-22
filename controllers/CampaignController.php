@@ -17,8 +17,9 @@ use Yii;
 use DrewM\MailChimp\MailChimp;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\data\ArrayDataProvider;
 
-class DefaultController extends Controller
+class CampaignController extends Controller
 {
 
     /**
@@ -32,7 +33,7 @@ class DefaultController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => [ 'index' ],
+                        'actions' => [ 'index', 'view', ],
                         'roles' => $this->module->roles
                     ]
                 ],
@@ -44,14 +45,44 @@ class DefaultController extends Controller
     }
 
     /**
-     * Displays import view
+     * Displays campaigns list
      *
      * @return mixed
      * @throws Exception
      */
     public function actionIndex()
     {
-        return $this->render( 'index' );
+        $apiKey = Yii::$app->controller->module->apiKey;
+
+        $MailChimp = new MailChimp( $apiKey );
+        $campaigns = $MailChimp->get( 'campaigns' );
+
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $campaigns[ 'campaigns' ],
+            'key' => 'id',
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Displays campaign info
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    public function actionView($id)
+    {
+        $apiKey = Yii::$app->controller->module->apiKey;
+
+        $MailChimp = new MailChimp( $apiKey );
+        $campaign = $MailChimp->get( 'campaigns/' . $id );
+
+        return $this->render('view', [
+            'campaign' => $campaign,
+        ]);
     }
 
 }
