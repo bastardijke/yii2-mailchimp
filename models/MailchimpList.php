@@ -46,7 +46,8 @@ class MailchimpList extends Model
             throw new InvalidConfigException("Missing required param 'id'.", 1);
         }
 
-        $this->_mailchimp = new MailChimp( Yii::$app->controller->module->apiKey );
+        //$this->_mailchimp = new MailChimp( Yii::$app->controller->module->apiKey );
+        $this->_mailchimp = new MailChimp( Yii::$app->getModule('mailchimp')->apiKey );
 
         $this->attributes = $this->_mailchimp->get( 'lists/' . $this->id );
 
@@ -68,14 +69,14 @@ class MailchimpList extends Model
 
     public function getMembers() {
 
-        return $this->_mailchimp->get( 'lists/' . $this->id . '/members' , [ 'count' => Yii::$app->controller->module->count, ] );
+        return $this->_mailchimp->get( 'lists/' . $this->id . '/members' , [ 'count' => Yii::$app->getModule('mailchimp')->count, ] );
 
     }
 
 
     public static function getList(){
 
-        $mailchimp = new MailChimp( Yii::$app->controller->module->apiKey );
+        $mailchimp = new MailChimp( Yii::$app->getModule('mailchimp')->apiKey );
 
         $lists = $mailchimp->get('lists');
 

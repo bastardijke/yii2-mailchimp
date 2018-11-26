@@ -20,6 +20,7 @@ use yii\web\Controller;
 use yii\data\ArrayDataProvider;
 
 use cinghie\mailchimp\models\ListMember;
+use cinghie\mailchimp\models\ListMemberForm;
 
 class MemberController extends Controller
 {
@@ -58,7 +59,7 @@ class MemberController extends Controller
         $model = new ListMember([ 'id' => $id , 'list_id' => $list_id ]);
 
         return $this->render('view', [
-            'model' => $model,
+            'model' => $model->read(),
         ]);
 
     }
@@ -71,10 +72,10 @@ class MemberController extends Controller
      */
     public function actionCreate( $list_id )
     {
-        $model = new ListMember([ 'list_id' => $list_id ]);
+        $model = new ListMemberForm([ 'list_id' => $list_id ]);
 
         if ($model->load(Yii::$app->request->post()) && $model->create()) {
-            return $this->redirect(['view', 'id' => $model->id , 'list_id' => $model->list_id ]);
+            return $this->redirect(['view', 'id' => $model->listMember->id , 'list_id' => $model->list_id ]);
         } else {
             return $this->render('create', [
                 'model' => $model,
