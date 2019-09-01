@@ -14,10 +14,9 @@ namespace cinghie\mailchimp\controllers;
 
 use Exception;
 use Yii;
-use DrewM\MailChimp\MailChimp;
+use yii\base\InvalidConfigException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
-use yii\data\ArrayDataProvider;
 
 use cinghie\mailchimp\models\ListMember;
 use cinghie\mailchimp\models\ListMemberForm;
@@ -41,27 +40,25 @@ class MemberController extends Controller
                     ]
                 ],
                 'denyCallback' => function () {
-	                throw new \RuntimeException(Yii::t('mailchimp','You are not allowed to access this page'));
+                    throw new \RuntimeException(Yii::t('mailchimp', 'You are not allowed to access this page'));
                 }
             ]
         ];
     }
 
-	/**
-	 * Displays a single ListMember model
-	 *
-	 * @return mixed
-	 * @throws Exception
-	 */
-    public function actionView( $id , $list_id )
+    /**
+     * Displays a single ListMember model
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    public function actionView($id, $list_id)
     {
-
-        $model = new ListMember([ 'id' => $id , 'list_id' => $list_id ]);
+        $model = new ListMember(['id' => $id, 'list_id' => $list_id]);
 
         return $this->render('view', [
             'model' => $model->read(),
         ]);
-
     }
 
     /**
@@ -69,8 +66,9 @@ class MemberController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @param string $list_id
      * @return mixed
+     * @throws InvalidConfigException
      */
-    public function actionCreate( $list_id )
+    public function actionCreate($list_id)
     {
         $model = new ListMemberForm([ 'list_id' => $list_id ]);
 
@@ -81,7 +79,6 @@ class MemberController extends Controller
                 'model' => $model,
             ]);
         }
-
     }
 
     /**
@@ -91,7 +88,7 @@ class MemberController extends Controller
      * @param string $list_id
      * @return mixed
      */
-    public function actionDelete( $id , $list_id )
+    public function actionDelete($id, $list_id)
     {
         $model = new ListMember([ 'id' => $id , 'list_id' => $list_id ]);
 
@@ -99,5 +96,4 @@ class MemberController extends Controller
 
         return $this->redirect(['list/view' , 'id' => $list_id]);
     }
-
 }

@@ -25,7 +25,7 @@ class CampaignController extends Controller
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'access' => [
@@ -38,7 +38,7 @@ class CampaignController extends Controller
                     ]
                 ],
                 'denyCallback' => function () {
-	                throw new \RuntimeException(Yii::t('mailchimp','You are not allowed to access this page'));
+                    throw new \RuntimeException(Yii::t('mailchimp','You are not allowed to access this page'));
                 }
             ]
         ];
@@ -54,8 +54,8 @@ class CampaignController extends Controller
     {
         $apiKey = Yii::$app->controller->module->apiKey;
 
-        $MailChimp = new MailChimp( $apiKey );
-        $campaigns = $MailChimp->get( 'campaigns' );
+        $MailChimp = new MailChimp($apiKey);
+        $campaigns = $MailChimp->get('campaigns');
 
         $dataProvider = new ArrayDataProvider([
             'allModels' => $campaigns[ 'campaigns' ],
@@ -70,6 +70,7 @@ class CampaignController extends Controller
     /**
      * Displays campaign info
      *
+     * @param $id
      * @return mixed
      * @throws Exception
      */
@@ -77,12 +78,11 @@ class CampaignController extends Controller
     {
         $apiKey = Yii::$app->controller->module->apiKey;
 
-        $MailChimp = new MailChimp( $apiKey );
-        $campaign = $MailChimp->get( 'campaigns/' . $id );
+        $MailChimp = new MailChimp($apiKey);
+        $campaign = $MailChimp->get('campaigns/' . $id);
 
         return $this->render('view', [
             'campaign' => $campaign,
         ]);
     }
-
 }

@@ -26,73 +26,73 @@ use yii\base\InvalidConfigException;
  */
 class Mailchimp extends Component
 {
-	/**
-	 * @var string
-	 */
-	public $apiKey;
+    /**
+    * @var string
+    */
+    public $apiKey;
 
-	/**
-	 * @var baseMailchimp
-	 */
-	private $_mailchimp;
+    /**
+     * @var baseMailchimp
+     */
+    private $_mailchimp;
 
-	/**
-	 * Mailchimp constructor
-	 *
-	 * @param array $config
-	 *
-	 * @throws InvalidConfigException
-	 */
-	public function __construct(array $config = [])
-	{
-		if(!isset($config['apiKey']) || !$config['apiKey']) {
-			throw new InvalidConfigException(Yii::t('mailchimp', 'Mailchimp API Key missing!'));
-		}
+    /**
+     * Mailchimp constructor
+     *
+     * @param array $config
+     *
+     * @throws InvalidConfigException
+     */
+    public function __construct(array $config = [])
+    {
+        if (!isset($config['apiKey']) || !$config['apiKey']) {
+            throw new InvalidConfigException(Yii::t('mailchimp', 'Mailchimp API Key missing!'));
+        }
 
-		$this->apiKey = $config['apiKey'];
+        $this->apiKey = $config['apiKey'];
 
-		parent::__construct($config);
-	}
+        parent::__construct($config);
+    }
 
-	/**
-	 * Mailchimp init
-	 *
-	 * @throws Exception
-	 */
-	public function init()
-	{
-		$this->_mailchimp = new baseMailchimp($this->apiKey);
+    /**
+     * Mailchimp init
+     *
+     * @throws Exception
+     */
+    public function init(): void
+    {
+        $this->_mailchimp = new baseMailchimp($this->apiKey);
 
-		parent::init();
-	}
+        parent::init();
+    }
 
-	/**
-	 * @return baseMailchimp
-	 */
-	public function getClient()
-	{
-		return $this->_mailchimp;
-	}
+    /**
+     * @return baseMailchimp
+     */
+    public function getClient()
+    {
+        return $this->_mailchimp;
+    }
 
-	/**
-	 * Get Mailchimp Lists
-	 *
-	 * @return array
-	 */
-	public function getLists()
-	{
-		return $this->_mailchimp->get('lists');
-	}
+    /**
+     * Get Mailchimp Lists
+     *
+     * @return array
+     */
+    public function getLists(): array
+    {
+        return $this->_mailchimp->get('lists');
+    }
 
-	/**
-	 * Get List Members
-	 *
-	 * @param string $listID
-	 *
-	 * @return array
-	 */
-	public function getListMembers($listID)
-	{
-		return $this->_mailchimp->get('lists/' .$listID. '/members');
-	}
+    /**
+     * Get List Members
+     *
+     * @param string $listID
+     *
+     * @return array
+     */
+    public function getListMembers($listID): array
+    {
+        return $this->_mailchimp->get('lists/' .$listID. '/members');
+    }
 }

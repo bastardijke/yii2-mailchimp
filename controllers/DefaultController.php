@@ -26,7 +26,7 @@ class DefaultController extends Controller
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'access' => [
@@ -39,7 +39,7 @@ class DefaultController extends Controller
                     ]
                 ],
                 'denyCallback' => function () {
-	                throw new \RuntimeException(Yii::t('mailchimp', 'You are not allowed to access this page'));
+                    throw new RuntimeException(Yii::t('mailchimp', 'You are not allowed to access this page'));
                 }
             ]
         ];
@@ -53,6 +53,6 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render( 'index' );
+        return $this->render('index');
     }
 }

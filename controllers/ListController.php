@@ -13,6 +13,7 @@
 namespace cinghie\mailchimp\controllers;
 
 use Exception;
+use RuntimeException;
 use Yii;
 use DrewM\MailChimp\MailChimp;
 use yii\filters\AccessControl;
@@ -40,22 +41,22 @@ class ListController extends Controller
                     ]
                 ],
                 'denyCallback' => function () {
-	                throw new \RuntimeException(Yii::t('mailchimp','You are not allowed to access this page'));
+                    throw new RuntimeException(Yii::t('mailchimp', 'You are not allowed to access this page'));
                 }
             ]
         ];
     }
 
-	/**
-	 * Displays import view
-	 *
-	 * @return mixed
-	 * @throws Exception
-	 */
+    /**
+     * Displays import view
+     *
+     * @return mixed
+     * @throws Exception
+     */
     public function actionIndex()
     {
         
-        $MailChimp = new MailChimp( Yii::$app->controller->module->apiKey );
+        $MailChimp = new MailChimp(Yii::$app->controller->module->apiKey);
 
         $lists = $MailChimp->get('lists');
         $dataProvider = new ArrayDataProvider([
@@ -68,13 +69,13 @@ class ListController extends Controller
         ]);
     }
 
-	/**
-	 * Displays a single MailchimpList model
-	 *
-	 * @return mixed
-	 * @throws Exception
-	 */
-    public function actionView( $id )
+    /**
+     * Displays a single MailchimpList model
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    public function actionView($id)
     {
 
         $model = new MailchimpList([ 'id' => $id ]);
@@ -82,7 +83,6 @@ class ListController extends Controller
         $dataProvider = new ArrayDataProvider([
             'allModels' => $members['members'],
         ]);
-
 
         return $this->render('view', [
             'model' => $model,
@@ -97,13 +97,11 @@ class ListController extends Controller
      * @param string $id
      * @return mixed
      */
-    public function actionDelete( $id )
+    public function actionDelete($id)
     {
-        $model = new MailchimpList([ 'id' => $id ]);
-
+        $model = new MailchimpList(['id' => $id]);
         $model->delete();
 
         return $this->redirect(['index']);
     }
-
 }

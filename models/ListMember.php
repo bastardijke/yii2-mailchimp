@@ -2,6 +2,7 @@
 
 namespace cinghie\mailchimp\models;
 
+use Exception;
 use Yii;
 use yii\base\Model;
 use yii\base\InvalidConfigException;
@@ -11,26 +12,26 @@ use DrewM\MailChimp\MailChimp;
 /**
  * This is the List model class.
  *
- * @property string     $id
- * @property string    	$list_id
- * @property string     $name
- * @property string     $email_address
- * @property string     $unique_email_id
- * @property string     $email_type
- * @property string     $status
- * @property string     $unsubscribe_reason
- * @property string     $ip_signup
- * @property string     $timestamp_signup
- * @property string     $ip_opt
- * @property string     $timestamp_opt
- * @property string     $last_changed
- * @property integer    $member_rating
- * @property string     $language
- * @property boolean    $vip
- * @property string     $email_client
- * @property integer    $tags_count
-
- * @property User       $user
+ * @property string $id
+ * @property string $list_id
+ * @property string $name
+ * @property string $email_address
+ * @property string $unique_email_id
+ * @property string $email_type
+ * @property string $status
+ * @property string $unsubscribe_reason
+ * @property string $ip_signup
+ * @property string $timestamp_signup
+ * @property string $ip_opt
+ * @property string $timestamp_opt
+ * @property string $last_changed
+ * @property integer $member_rating
+ * @property string $language
+ * @property boolean $vip
+ * @property string $email_client
+ * @property integer $tags_count
+ * @property mixed $error
+ * @property User $user
  *
  */
 class ListMember extends Model
@@ -95,13 +96,17 @@ class ListMember extends Model
         return [ 'list_id', 'email_address', 'email_type', 'status', 'language', 'member_rating', 'vip', 'merge_fields', ];
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws Exception
+     */
     public function init(): void
     {
-        if ( empty( $this->list_id ) ) {
+        if (empty($this->list_id)) {
             throw new InvalidConfigException("Missing required param 'list_id'", 1);
         }
 
-        $this->mailchimp = new MailChimp( Yii::$app->getModule('mailchimp')->apiKey );
+        $this->mailchimp = new MailChimp(Yii::$app->getModule('mailchimp')->apiKey);
     }
 
     /**
@@ -110,9 +115,9 @@ class ListMember extends Model
      */
     public function read(): self
     {
-        $id = $this->id ? : $this->mailchimp->subscriberHash( $this->email_address ) ;
+        $id = $this->id ? : $this->mailchimp->subscriberHash($this->email_address);
 
-        $this->attributes = $this->mailchimp->get( 'lists/' . $this->list_id . '/members/' . $id );
+        $this->attributes = $this->mailchimp->get('lists/' . $this->list_id . '/members/' . $id);
 
         return $this;
     }
@@ -120,16 +125,19 @@ class ListMember extends Model
     /**
      * Adds this ListMember to mailchimp.
      * @return boolean
+     * @throws InvalidConfigException
      */
     public function create(): bool
     {
-        if ( empty( $this->status ) && empty( $this->email_address ) ) {
+        if (empty($this->status) && empty($this->email_address)) {
             throw new InvalidConfigException("Missing required params 'status' and 'email_address'", 1);
         }
 
-        $result = $this->mailchimp->post( "lists/" . $this->list_id . "/members" , $this->toArray() );
+        $result = $this->mailchimp->post("lists/" . $this->list_id . "/members", $this->toArray());
 
-        if ( $this->mailchimp->success() ) { $this->attributes = $result; }
+        if ($this->mailchimp->success()) {
+            $this->attributes = $result;
+        }
 
         return $this->mailchimp->success();
     }
@@ -139,17 +147,17 @@ class ListMember extends Model
      */
     public function update(): bool
     {
-        $this->mailchimp->patch('lists/' . $this->list_id . '/members/' . $this->id, $this->toArray() );
+        $this->mailchimp->patch('lists/' . $this->list_id . '/members/' . $this->id, $this->toArray());
         return $this->mailchimp->success();
     }
 
-    public function delete()
+    public function delete(): bool
     {
         $this->mailchimp->delete('lists/' . $this->list_id . '/members/' . $this->id);
         return $this->mailchimp->success();
     }
 
-    public function getError()
+    public function getError(): string
     {
         return $this->mailchimp->getLastError();
     }
