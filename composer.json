@@ -17,12 +17,26 @@
         }
     ],
     "require": {
-        "yiisoft/yii2": "*",
-        "drewm/mailchimp-api": "*"
+        "php": ">=7.1.0",
+        "yiisoft/yii2": "~2.0.14",
+        "cinghie/yii2-traits": "@dev",
+        "drewm/mailchimp-api": "^2.5"
     },
     "autoload": {
         "psr-4": {
             "cinghie\\mailchimp\\": ""
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
+    "config": {
+        "process-timeout": 1800,
+        "fxp-asset": {
+            "enabled": false
         }
     }
 }

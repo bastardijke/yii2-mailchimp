@@ -7,20 +7,22 @@
  * @github https://github.com/cinghie/yii2-mailchimp
  * @license BSD 3-Clause
  * @package yii2-mailchimp
- * @version 0.2.0
+ * @version 0.2.2
  */
 
 namespace cinghie\mailchimp\controllers;
 
 use Exception;
+use RuntimeException;
 use Yii;
-use DrewM\MailChimp\MailChimp;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 
+/**
+ * Class DefaultController
+ */
 class DefaultController extends Controller
 {
-
     /**
      * @inheritdoc
      */
@@ -28,7 +30,7 @@ class DefaultController extends Controller
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,
@@ -37,7 +39,7 @@ class DefaultController extends Controller
                     ]
                 ],
                 'denyCallback' => function () {
-	                throw new \RuntimeException(Yii::t('mailchimp','You are not allowed to access this page'));
+	                throw new \RuntimeException(Yii::t('mailchimp', 'You are not allowed to access this page'));
                 }
             ]
         ];
@@ -53,5 +55,4 @@ class DefaultController extends Controller
     {
         return $this->render( 'index' );
     }
-
 }

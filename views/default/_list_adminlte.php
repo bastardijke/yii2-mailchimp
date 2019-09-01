@@ -1,5 +1,7 @@
 <?php
 
+/** @var array $members */
+
 use yii\helpers\Html;
 
 ?>
@@ -12,9 +14,7 @@ use yii\helpers\Html;
 
 			<!-- /.box-header -->
 			<div class="box-body">
-
 				<div class="table-responsive">
-
 					<table class="table no-margin">
 						<thead>
 						<tr>
@@ -35,7 +35,6 @@ use yii\helpers\Html;
 						<?php endforeach; ?>
 						</tbody>
 					</table>
-
 				</div>
 
 			</div>

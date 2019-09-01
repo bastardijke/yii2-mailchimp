@@ -7,19 +7,17 @@
  * @github https://github.com/cinghie/yii2-mailchimp
  * @license BSD 3-Clause
  * @package yii2-mailchimp
- * @version 0.2.0
+ * @version 0.2.2
  */
 
 namespace cinghie\mailchimp;
 
 use Yii;
+use yii\base\Module;
 use yii\i18n\PhpMessageSource;
 
-class Mailchimp extends \yii\base\Module
+class Mailchimp extends Module
 {
-	// Mailchimp API Key
-    public $apiKey = '';
-
 	// Rules
 	public $roles = ['admin'];
 
@@ -40,8 +38,9 @@ class Mailchimp extends \yii\base\Module
      */
     public function init()
     {
+	    $this->registerTranslations();
+
         parent::init();
-        $this->registerTranslations();
     }
 
     /**
@@ -57,5 +56,4 @@ class Mailchimp extends \yii\base\Module
             ];
         }
     }
-
 }

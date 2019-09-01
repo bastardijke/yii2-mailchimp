@@ -1,7 +1,17 @@
 Yii2 Mailchimp
 ==============
 
-Yii2 MailChimp extension to manage the Email Marketing Platform: https://www.mailchimp.com/
+![License](https://img.shields.io/packagist/l/cinghie/yii2-mailchimp.svg)
+![Latest Stable Version](https://img.shields.io/github/release/cinghie/yii2-mailchimp.svg)
+![Latest Release Date](https://img.shields.io/github/release-date/cinghie/yii2-mailchimp.svg)
+![Latest Commit](https://img.shields.io/github/last-commit/cinghie/yii2-mailchimp.svg)
+[![Total Downloads](https://img.shields.io/packagist/dt/cinghie/yii2-mailchimp.svg)](https://packagist.org/packages/cinghie/yii2-mailchimp)
+
+Yii2 MailChimp extension to manage the Mailchimp Email Marketing Platform:
+
+ - Website: https://www.mailchimp.com/
+ - PHP API: https://github.com/drewm/mailchimp-api
+ - Documentation: https://developer.mailchimp.com/documentation/mailchimp/
 
 Installation
 ------------
@@ -23,14 +33,25 @@ or add
 Configuration
 -------------
 
-Set on your configuration file, in modules section
+Set on your configuration file
 
 ```
+use cinghie\mailchimp\components\Mailchimp as MailchimpComponent;
+use cinghie\mailchimp\Mailchimp;
+
+'components' => [
+
+	'mailchimp' => [
+		'class' => MailchimpComponent::class,
+		'apiKey' => 'YOUR_MAILCHIMP_API_KEY'
+	],
+
+],
+
 'modules' => [ 
     
     'mailchimp' => [
-        'class' => 'cinghie\mailchimp\Mailchimp',
-        'apiKey' => 'YOUR_API_KEY',
+        'class' => Mailchimp::class,
         'showFirstname' => true,
         'showLastname' => true,
         'count' => 2000 // The number of records to return. Default value is 10.
@@ -39,12 +60,54 @@ Set on your configuration file, in modules section
 ]
 ```
 
+## Overrides
+
+Override controller example, on modules config
+
+```
+'modules' => [ 
+
+	'mailchimp' => [
+		'class' => Mailchimp::class,
+		'controllerMap' => [
+			'default' => 'app\controllers\DefaultController',
+		]
+	]
+	
+],
+```
+
+Override view example, on components config
+
+```
+'components' => [ 
+
+	'view' => [
+		'theme' => [
+			'pathMap' => [
+				'@cinghie/mailchimp/views/default' => '@app/views/mailchimp/default',
+			],
+		],
+	],
+	
+],
+```
+
+Usage
+---------------------------
+
+```
+\Yii::$app->mailchimp;
+\Yii::$app->mailchimp->getClient();
+\Yii::$app->mailchimp->getLists();
+\Yii::$app->mailchimp->getListMembers($listID);
+```
+
 Widget Subscription Example
 ---------------------------
 
 ```
 <?= Subscription::widget([
-    'apiKey' => 'MYAPIKEY' // if not set get Configuration apiKey
     'list_id' => 'MYLISTID' // if not set raise Error
 ]) ?>
 ```
@@ -53,7 +116,6 @@ alternative to list_id you can set an list_array to set a list_id to a specific 
 
 ```
 <?= Subscription::widget([
-    'apiKey' => 'MYAPIKEY' // if not set get Configuration apiKey
     'list_array' => [
         'en' => 'MYLISTID_EN',
         'es' => 'MYLISTID_ES',

@@ -7,7 +7,7 @@
  * @github https://github.com/cinghie/yii2-mailchimp
  * @license BSD 3-Clause
  * @package yii2-mailchimp
- * @version 0.2.0
+ * @version 0.2.2
  */
 
 return [
@@ -18,12 +18,13 @@ return [
     'List Name' => 'Nome Lista',
     'Lists' => 'Liste',
     'List' => 'Lista',
+    'Mailchimp' => 'Mailchimp',
+    'Mailchimp API Key missing!' => 'API Key Mailchimp mancante!',
     'Member Count' => 'N° Iscritti',
-    'Name' => 'Nome',
-	'Newsletter' => 'Newsletter',
 	'Newsletters' => 'Newsletters',
+	'No Lists Found' => 'Nessuna lista trovata',
     'Submit' => 'Invia',
-    'Subscribe' => 'Iscriviti',
 	'Subscription\s Date' => 'Data Sottoscrizione',
     'Unsubscribe Count' => 'N° Annullati',
+	'You must define Mailchimp ListID!' => 'Devi definire il ListID di Mailchimp!',
 ];

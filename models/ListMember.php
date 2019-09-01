@@ -29,23 +29,23 @@ use DrewM\MailChimp\MailChimp;
  * @property boolean    $vip
  * @property string     $email_client
  * @property integer    $tags_count
- 
+
  * @property User       $user
  *
  */
 class ListMember extends Model
 {
 
-	const STATUS_SUBSCRIBED = 'subscribed';
-	const STATUS_UNSUBSCRIBED = 'unsubscribed';
-	const STATUS_CLEANED = 'cleaned';
-	const STATUS_PENDING = 'pending';
-	const STATUS_TRANSACTIONAL = 'transactional';
+    public const STATUS_SUBSCRIBED = 'subscribed';
+    public const STATUS_UNSUBSCRIBED = 'unsubscribed';
+    public const STATUS_CLEANED = 'cleaned';
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_TRANSACTIONAL = 'transactional';
 
-    const EMAIL_TYPE_HTML = 'html';
-    const EMAIL_TYPE_TEXT = 'text';
+    public const EMAIL_TYPE_HTML = 'html';
+    public const EMAIL_TYPE_TEXT = 'text';
 
-	private $_mailchimp = null;
+    protected $mailchimp = null;
 
     public $list_id;
 
@@ -73,15 +73,13 @@ class ListMember extends Model
     public $marketing_permissions;
     public $last_note;
 
-
-
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            [[ 'email_address', 'list_id', 'status', ], 'required'],  
+            [[ 'email_address', 'list_id', 'status', ], 'required'],
             [[ 'member_rating', 'tags_count' ], 'integer'],
             [[ 'list_id', 'id', 'email_address', 'unique_email_id', 'email_type', 'status', 'unsubscribe_reason', 'ip_signup', 'timestamp_signup', 'ip_opt', 'timestamp_opt', 'last_changed', 'email_client', ], 'string'],
             [[ 'vip', ], 'boolean' ],
@@ -92,76 +90,71 @@ class ListMember extends Model
     /**
      * @inheritdoc
      */
-    public function fields()
+    public function fields(): array
     {
         return [ 'list_id', 'email_address', 'email_type', 'status', 'language', 'member_rating', 'vip', 'merge_fields', ];
     }
 
+    public function init(): void
+    {
+        if ( empty( $this->list_id ) ) {
+            throw new InvalidConfigException("Missing required param 'list_id'", 1);
+        }
 
-    public function init(){
-    	if ( empty( $this->list_id ) ) {
-    		throw new InvalidConfigException("Missing required param 'list_id'", 1);
-    	}
-
-    	$this->_mailchimp = new MailChimp( Yii::$app->getModule('mailchimp')->apiKey );
-
+        $this->mailchimp = new MailChimp( Yii::$app->getModule('mailchimp')->apiKey );
     }
 
     /**
      * Adds this ListMember to mailchimp.
-     * @return boolean
+     * @return ListMember
      */
-    public function read() {
+    public function read(): self
+    {
+        $id = $this->id ? : $this->mailchimp->subscriberHash( $this->email_address ) ;
 
-        $id = $this->id ? : $this->_mailchimp->subscriberHash( $this->email_address ) ;
-
-        $this->attributes = $this->_mailchimp->get( 'lists/' . $this->list_id . '/members/' . $id );
+        $this->attributes = $this->mailchimp->get( 'lists/' . $this->list_id . '/members/' . $id );
 
         return $this;
-
     }
 
     /**
      * Adds this ListMember to mailchimp.
      * @return boolean
      */
-    public function create() {
+    public function create(): bool
+    {
+        if ( empty( $this->status ) && empty( $this->email_address ) ) {
+            throw new InvalidConfigException("Missing required params 'status' and 'email_address'", 1);
+        }
 
-    	if ( empty( $this->status ) && empty( $this->email_address ) ) {
-    		throw new InvalidConfigException("Missing required params 'status' and 'email_address'", 1);
-	  	}
+        $result = $this->mailchimp->post( "lists/" . $this->list_id . "/members" , $this->toArray() );
 
-	  	$result = $this->_mailchimp->post( "lists/" . $this->list_id . "/members" , $this->toArray() );
+        if ( $this->mailchimp->success() ) { $this->attributes = $result; }
 
-		if ( $this->_mailchimp->success() ) { $this->attributes = $result; }
-
-	  	return $this->_mailchimp->success();
-
+        return $this->mailchimp->success();
     }
 
-    public function update() {
-
-		$this->_mailchimp->patch("lists/" . $this->list_id . "/members/" . $this->id, $this->toArray() );
-
-    	return $this->_mailchimp->success();
-
+    /**
+     * @return bool
+     */
+    public function update(): bool
+    {
+        $this->mailchimp->patch('lists/' . $this->list_id . '/members/' . $this->id, $this->toArray() );
+        return $this->mailchimp->success();
     }
 
-    public function delete() {
-
-    	$this->_mailchimp->delete("lists/" . $this->list_id . "/members/" . $this->id);
-
-    	return $this->_mailchimp->success();
-
+    public function delete()
+    {
+        $this->mailchimp->delete('lists/' . $this->list_id . '/members/' . $this->id);
+        return $this->mailchimp->success();
     }
 
-    public function getError() {
-
-        return $this->_mailchimp->getLastError();
-
+    public function getError()
+    {
+        return $this->mailchimp->getLastError();
     }
 
-    public static function getStatusList()
+    public static function getStatusList(): array
     {
         return [
             self::STATUS_SUBSCRIBED => self::STATUS_SUBSCRIBED,
@@ -172,12 +165,11 @@ class ListMember extends Model
         ];
     }
 
-    public static function getEmailTypeList()
+    public static function getEmailTypeList(): array
     {
         return [
             self::EMAIL_TYPE_HTML => self::EMAIL_TYPE_HTML,
             self::EMAIL_TYPE_TEXT => self::EMAIL_TYPE_TEXT,
         ];
     }
-
 }

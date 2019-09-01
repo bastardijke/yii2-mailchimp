@@ -7,10 +7,10 @@
  * @github https://github.com/cinghie/yii2-mailchimp
  * @license BSD 3-Clause
  * @package yii2-mailchimp
- * @version 0.2.0
+ * @version 0.2.2
  */
 
-return array(
+return [
     'Email' => 'Email',
     'First Name' => 'First Name',
     'Last Name' => 'Last Name',
@@ -23,4 +23,4 @@ return array(
     'Subscribe' => 'Subscribe',
     'Unsubscribe Count' => 'Unsubscribe Count',
     'You are not allowed to access this page' => 'You are not allowed to access this page',
-);
+];
