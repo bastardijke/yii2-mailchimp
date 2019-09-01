@@ -55,8 +55,7 @@ class ListController extends Controller
      */
     public function actionIndex()
     {
-        
-        $MailChimp = new MailChimp(Yii::$app->controller->module->apiKey);
+        $MailChimp = new MailChimp(Yii::$app->mailchimp->apiKey);
 
         $lists = $MailChimp->get('lists');
         $dataProvider = new ArrayDataProvider([

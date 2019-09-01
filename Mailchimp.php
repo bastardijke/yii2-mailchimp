@@ -18,17 +18,17 @@ use yii\i18n\PhpMessageSource;
 
 class Mailchimp extends Module
 {
-	// Rules
-	public $roles = ['admin'];
+    // Rules
+    public $roles = ['admin'];
 
-	// Show Firstname in Widget
+    // Show Firstname in Widget
     public $showFirstname = true;
 
-	// Show Lastname in Widget
+    // Show Lastname in Widget
     public $showLastname = true;
 
-	// Show Titles in the views
-	public $showTitles = false;
+    // Show Titles in the views
+    public $showTitles = false;
 
     // Default query 'count': The number of records to return.
     public $count = 10;
@@ -38,7 +38,7 @@ class Mailchimp extends Module
      */
     public function init()
     {
-	    $this->registerTranslations();
+        $this->registerTranslations();
 
         parent::init();
     }
@@ -48,8 +48,7 @@ class Mailchimp extends Module
      */
     public function registerTranslations()
     {
-        if (!isset(Yii::$app->i18n->translations['mailchimp*']))
-        {
+        if (!isset(Yii::$app->i18n->translations['mailchimp*'])) {
             Yii::$app->i18n->translations['mailchimp*'] = [
                 'class' => PhpMessageSource::class,
                 'basePath' => __DIR__ . '/messages',

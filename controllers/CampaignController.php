@@ -13,6 +13,7 @@
 namespace cinghie\mailchimp\controllers;
 
 use Exception;
+use RuntimeException;
 use Yii;
 use DrewM\MailChimp\MailChimp;
 use yii\filters\AccessControl;
@@ -38,7 +39,7 @@ class CampaignController extends Controller
                     ]
                 ],
                 'denyCallback' => function () {
-                    throw new \RuntimeException(Yii::t('mailchimp','You are not allowed to access this page'));
+                    throw new RuntimeException(Yii::t('mailchimp', 'You are not allowed to access this page'));
                 }
             ]
         ];
@@ -52,9 +53,7 @@ class CampaignController extends Controller
      */
     public function actionIndex()
     {
-        $apiKey = Yii::$app->controller->module->apiKey;
-
-        $MailChimp = new MailChimp($apiKey);
+        $MailChimp = new MailChimp(Yii::$app->mailchimp->apiKey);
         $campaigns = $MailChimp->get('campaigns');
 
         $dataProvider = new ArrayDataProvider([
@@ -76,9 +75,7 @@ class CampaignController extends Controller
      */
     public function actionView($id)
     {
-        $apiKey = Yii::$app->controller->module->apiKey;
-
-        $MailChimp = new MailChimp($apiKey);
+        $MailChimp = new MailChimp(Yii::$app->mailchimp->apiKey);
         $campaign = $MailChimp->get('campaigns/' . $id);
 
         return $this->render('view', [

@@ -80,11 +80,28 @@ class ListMember extends Model
     public function rules(): array
     {
         return [
-            [[ 'email_address', 'list_id', 'status', ], 'required'],
-            [[ 'member_rating', 'tags_count' ], 'integer'],
-            [[ 'list_id', 'id', 'email_address', 'unique_email_id', 'email_type', 'status', 'unsubscribe_reason', 'ip_signup', 'timestamp_signup', 'ip_opt', 'timestamp_opt', 'last_changed', 'email_client', ], 'string'],
-            [[ 'vip', ], 'boolean' ],
-            [[ 'merge_fields', 'interests', 'stats', 'location', 'marketing_permissions', 'last_note' ], 'safe'],
+            [['email_address', 'list_id', 'status', ], 'required'],
+            [['member_rating', 'tags_count' ], 'integer'],
+            [
+                [
+                    'list_id',
+                    'id',
+                    'email_address',
+                    'unique_email_id',
+                    'email_type',
+                    'status',
+                    'unsubscribe_reason',
+                    'ip_signup',
+                    'timestamp_signup',
+                    'ip_opt',
+                    'timestamp_opt',
+                    'last_changed',
+                    'email_client'
+                ],
+                'string'
+            ],
+            [['vip'], 'boolean' ],
+            [['merge_fields', 'interests', 'stats', 'location', 'marketing_permissions', 'last_note' ], 'safe'],
         ];
     }
 
@@ -93,7 +110,7 @@ class ListMember extends Model
      */
     public function fields(): array
     {
-        return [ 'list_id', 'email_address', 'email_type', 'status', 'language', 'member_rating', 'vip', 'merge_fields', ];
+        return ['list_id', 'email_address', 'email_type', 'status', 'language', 'member_rating', 'vip', 'merge_fields'];
     }
 
     /**
@@ -106,7 +123,7 @@ class ListMember extends Model
             throw new InvalidConfigException("Missing required param 'list_id'", 1);
         }
 
-        $this->mailchimp = new MailChimp(Yii::$app->getModule('mailchimp')->apiKey);
+        $this->mailchimp = new MailChimp(Yii::$app->mailchimp->apiKey);
     }
 
     /**

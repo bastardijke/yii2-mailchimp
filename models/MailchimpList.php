@@ -2,6 +2,7 @@
 
 namespace cinghie\mailchimp\models;
 
+use Exception;
 use Yii;
 use yii\base\Model;
 use yii\base\InvalidConfigException;
@@ -15,16 +16,14 @@ use DrewM\MailChimp\MailChimp;
  * @property string     $id
  * @property integer    $web_id
  * @property string     $name
-
-
-
+ *
  * @property ListMember[] $members
  *
  */
 class MailchimpList extends Model
 {
 
-    private $_mailchimp = null;
+    protected $mailchimp = null;
 
     public $id;
     public $web_id;
@@ -41,42 +40,41 @@ class MailchimpList extends Model
         ];
     }
 
-    public function init(){
-        if ( empty( $this->id ) ) {
+    /**
+     * @throws InvalidConfigException
+     * @throws Exception
+     */
+    public function init(): void
+    {
+        if (empty($this->id)) {
             throw new InvalidConfigException("Missing required param 'id'.", 1);
         }
 
-        //$this->_mailchimp = new MailChimp( Yii::$app->controller->module->apiKey );
-        $this->_mailchimp = new MailChimp( Yii::$app->getModule('mailchimp')->apiKey );
+        $this->mailchimp = new MailChimp(Yii::$app->mailchimp->apiKey);
 
-        $this->attributes = $this->_mailchimp->get( 'lists/' . $this->id );
-
+        $this->attributes = $this->mailchimp->get('lists/' . $this->id);
     }
 
-
-/*    public static function create( $params = [] ) {
-
-        return new self();
-
-    }*/
-
-
-    public function delete() {
-
-        return $this->_mailchimp->delete("lists/" . $this->list_id );
-
+    public function delete()
+    {
+        return $this->mailchimp->delete('lists/' . $this->list_id);
     }
 
-    public function getMembers() {
-
-        return $this->_mailchimp->get( 'lists/' . $this->id . '/members' , [ 'count' => Yii::$app->getModule('mailchimp')->count, ] );
-
+    public function getMembers()
+    {
+        return $this->mailchimp->get(
+            'lists/' . $this->id . '/members',
+            [ 'count' => Yii::$app->getModule('mailchimp')->count ]
+        );
     }
 
-
-    public static function getList(){
-
-        $mailchimp = new MailChimp( Yii::$app->getModule('mailchimp')->apiKey );
+    /**
+     * @return array
+     * @throws Exception
+     */
+    public static function getList(): array
+    {
+        $mailchimp = new MailChimp(Yii::$app->mailchimp->apiKey);
 
         $lists = $mailchimp->get('lists');
 
@@ -85,7 +83,5 @@ class MailchimpList extends Model
             'id',
             'name'
         );
-
     }
-
 }

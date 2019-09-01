@@ -34,7 +34,7 @@ class Mailchimp extends Component
     /**
      * @var baseMailchimp
      */
-    private $_mailchimp;
+    protected $mailchimp;
 
     /**
      * Mailchimp constructor
@@ -61,7 +61,7 @@ class Mailchimp extends Component
      */
     public function init(): void
     {
-        $this->_mailchimp = new baseMailchimp($this->apiKey);
+        $this->mailchimp = new baseMailchimp($this->apiKey);
 
         parent::init();
     }
@@ -71,7 +71,7 @@ class Mailchimp extends Component
      */
     public function getClient()
     {
-        return $this->_mailchimp;
+        return $this->mailchimp;
     }
 
     /**
@@ -81,7 +81,7 @@ class Mailchimp extends Component
      */
     public function getLists(): array
     {
-        return $this->_mailchimp->get('lists');
+        return $this->mailchimp->get('lists');
     }
 
     /**
@@ -93,6 +93,6 @@ class Mailchimp extends Component
      */
     public function getListMembers($listID): array
     {
-        return $this->_mailchimp->get('lists/' .$listID. '/members');
+        return $this->mailchimp->get('lists/' .$listID. '/members');
     }
 }
